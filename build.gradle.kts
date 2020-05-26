@@ -32,18 +32,21 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("com.querydsl:querydsl-sql:4.0.3")
-    implementation("com.querydsl:querydsl-sql-spring:4.0.3")
 
-    implementation("joda-time:joda-time:2.10.6")
+    // Joda Time
+    val jodaTimeVersion = "2.10.6";
+    implementation("joda-time:joda-time:${jodaTimeVersion}")
 
-    // Query DSL
-    implementation("com.querydsl:querydsl-jpa:4.2.2")
-    kapt("com.querydsl:querydsl-apt:4.2.2:jpa")
+    // Querydsl-sql
+    val querydslVersion = "4.3.1";
+    implementation("com.querydsl:querydsl-sql:${querydslVersion}")
+    implementation("com.querydsl:querydsl-sql-spring:${querydslVersion}")
 
-    compileOnly("org.projectlombok:lombok")
+    // Querydsl-jpa
+    implementation("com.querydsl:querydsl-jpa:${querydslVersion}")
+    kapt("com.querydsl:querydsl-apt:${querydslVersion}:jpa")
+
     runtimeOnly("com.h2database:h2")
-    annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
@@ -56,7 +59,7 @@ tasks.withType<Test> {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 

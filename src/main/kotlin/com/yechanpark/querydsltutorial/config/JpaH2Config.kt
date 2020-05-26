@@ -1,18 +1,11 @@
 package teemoDevs.MainWebApplication.config
 
-import com.querydsl.sql.H2Templates
-import com.querydsl.sql.SQLQueryFactory
-import com.querydsl.sql.SQLTemplates
-import com.querydsl.sql.spring.SpringConnectionProvider
-import com.querydsl.sql.spring.SpringExceptionTranslator
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.core.env.Environment
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
@@ -24,19 +17,15 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableTransactionManagement
-class JpaH2Config {
-    @Autowired
-    private val env: Environment? = null
+class JpaH2Config(private val env: Environment? = null) {
 
-    @Primary
-    @Bean(name = ["dataSource"])
+    @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     fun dataSource(): DataSource {
         return DataSourceBuilder.create().build()
     }
 
-    @Primary
-    @Bean(name = ["entityManagerFactory"])
+    @Bean
     fun entityManagerFactory(
         builder: EntityManagerFactoryBuilder,
         @Qualifier("dataSource") dataSource: DataSource?
@@ -50,11 +39,8 @@ class JpaH2Config {
         return em
     }
 
-    @Primary
-    @Bean(name = ["transactionManager"])
-    fun transactionManager(
-        @Qualifier("entityManagerFactory") entityManagerFactory: EntityManagerFactory?
-    ): PlatformTransactionManager {
+    @Bean
+    fun transactionManager(@Qualifier("entityManagerFactory") entityManagerFactory: EntityManagerFactory?): PlatformTransactionManager {
         return JpaTransactionManager(entityManagerFactory!!)
     }
 
@@ -80,6 +66,5 @@ class JpaH2Config {
         )
         return properties
     }
-
 
 }
